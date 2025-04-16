@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Draw.io SharePoint Viewer",
+  "version": "1.0",
+  "description": "Renders draw.io files directly in browser when accessed from SharePoint",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "https://*.sharepoint.com/*"
+  ],
+  "host_permissions": [
+    "https://*.sharepoint.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.sharepoint.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["drawio-viewer.html"],
+    "matches": ["https://*.sharepoint.com/*"]
+  }]
+} 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draw.io Viewer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="editor" src="https://app.diagrams.net/?embed=1&ui=atlas&spin=1&proto=json"></iframe>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileUrl = urlParams.get('url');
+        
+        window.addEventListener('message', function(evt) {
+            if (evt.data.length > 0) {
+                const msg = JSON.parse(evt.data);
+                
+                if (msg.event == 'init') {
+                    // Load the file
+                    fetch(fileUrl)
+                        .then(response => response.text())
+                        .then(xml => {
+                            const loadMsg = {
+                                action: 'load',
+                                xml: xml,
+                                autosave: 1
+                            };
+                            document.getElementById('editor').contentWindow.postMessage(JSON.stringify(loadMsg), '*');
+                        })
+                        .catch(error => console.error('Error loading file:', error));
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
